@@ -1,0 +1,20 @@
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: linuxserver-code-server-latest
+    hostname: code
+    restart: always
+    ports:
+      - 172.17.0.1:50022:8443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "/var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/data:/data"
+      - "/var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/config/code:/config"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - PASSWORD=${USER_PASSWORD:-password}           # optional
+      - SUDO_PASSWORD=${ROOT_PASSWORD}                # optional
+      - PROXY_DOMAIN=${HOSTNAME}                      # optional
+      - DEFAULT_WORKSPACE=/data/workspace             # optional
