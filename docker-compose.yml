@@ -1,0 +1,37 @@
+name: code
+services:
+  server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    hostname: code
+    restart: always
+    pull_policy: always
+    privileged: true
+    tty: true
+    stdin_open: true
+    user: root
+    group_add:
+      - root
+    environment:
+      - TZ=${TZ:-America/New_York}
+      - PROXY_DOMAIN=${BASE_HOSTNAME_NAME}
+      - DEFAULT_THEME='Visual Studio Dark'
+      - DEFAULT_WORKSPACE=/data/workspace
+      - PASSWORD=${APP_USER_PASS:-password}
+      - SUDO_PASSWORD=${APP_ADMIN_PASS:-password}
+    ports:
+      - '172.17.0.1:50022:8443'
+    volumes:
+      - $HOME/.ssh:/config/.ssh
+      - $HOME/.gnupg:/config/.gnupg
+      - $HOME/Projects:/data/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/data/code:/data
+      - /var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/config/code:/config
+    networks:
+      - code
+
+networks:
+  code:
+    name: code
+    external: false
