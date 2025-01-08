@@ -1,18 +1,19 @@
-name: code
+name: code-server
 services:
   server:
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
-    hostname: code
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
     restart: always
     pull_policy: always
     privileged: true
     tty: true
     stdin_open: true
     user: root
-    group_add:
-      - root
+    group_add: root
     environment:
+      - PUID=${USER_UID:-1000}
+      - PGID=${USER_GID:-1000}
       - TZ=${TZ:-America/New_York}
       - PROXY_DOMAIN=${BASE_HOSTNAME_NAME}
       - DEFAULT_THEME='Visual Studio Dark'
@@ -29,9 +30,9 @@ services:
       - /var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/data/code:/data
       - /var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/config/code:/config
     networks:
-      - code
+      - code-server
 
 networks:
-  code:
-    name: code
+  code-server:
+    name: code-server
     external: false
