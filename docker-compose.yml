@@ -10,14 +10,15 @@ services:
     tty: true
     stdin_open: true
     user: root
-    group_add: root
+    group_add:
+      - root
     environment:
       - PUID=${USER_UID:-1000}
       - PGID=${USER_GID:-1000}
       - TZ=${TZ:-America/New_York}
       - GIT_DISCOVERY_ACROSS_FILESYSTEM=1
-      - PROXY_DOMAIN=${BASE_HOSTNAME_NAME}
-      - DEFAULT_THEME='Visual Studio Dark'
+      - PROXY_DOMAIN=${BASE_HOST_NAME}
+      - 'DEFAULT_THEME=Visual Studio Dark'
       - DEFAULT_WORKSPACE=/data/workspace
       - PASSWORD=${APP_USER_PASS:-password}
       - SUDO_PASSWORD=${APP_ADMIN_PASS:-password}
@@ -37,3 +38,4 @@ networks:
   code-server:
     name: code-server
     external: false
+
