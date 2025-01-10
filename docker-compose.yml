@@ -15,6 +15,7 @@ services:
       - PUID=${USER_UID:-1000}
       - PGID=${USER_GID:-1000}
       - TZ=${TZ:-America/New_York}
+      - GIT_DISCOVERY_ACROSS_FILESYSTEM=1
       - PROXY_DOMAIN=${BASE_HOSTNAME_NAME}
       - DEFAULT_THEME='Visual Studio Dark'
       - DEFAULT_WORKSPACE=/data/workspace
