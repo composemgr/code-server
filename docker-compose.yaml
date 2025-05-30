@@ -38,8 +38,8 @@ services:
       - '$HOME/.gnupg:/config/.gnupg'
       - '$HOME/Projects:/data/workspace'
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - '/var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/data/code:/data'
-      - '/var/lib/srv/$USER/docker/linuxserver/code-server/latest/rootfs/config/code:/config'
+      - '/var/lib/srv/$USER/docker/code-server/rootfs/data/code:/data'
+      - '/var/lib/srv/$USER/docker/code-server/rootfs/config/code:/config'
     networks:
       - code-server
 
