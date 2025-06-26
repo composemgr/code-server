@@ -1,0 +1,49 @@
+# nginx proxy address - https://172.17.0.1:50022
+
+name: code-server
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    privileged: true
+    tty: true
+    stdin_open: true
+    user: root
+    group_add:
+      - root
+    logging: *default-logging
+    environment:
+      - TZ=${TZ:-America/New_York}
+      - PUID=${USER_UID:-${UID:-1000}}
+      - PGID=${USER_GID:-${GID:-$UID}}
+      - GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+      - 'DEFAULT_THEME=Visual Studio Dark'
+      - 'DEFAULT_WORKSPACE=/data/workspace'
+      - PROXY_DOMAIN=${BASE_HOST_NAME:-$HOSTNAME}
+      - PASSWORD=${APP_USER_PASS:-ovQZ9YVCDr3jdb4OcuPmDp6FILLS1KX5}
+      - SUDO_PASSWORD=${APP_ADMIN_PASS:-ovQZ9YVCDr3jdb4OcuPmDp6FILLS1KX5}
+    ports:
+      - '172.17.0.1:50022:8443'
+    volumes:
+      - '$HOME/.ssh:/config/.ssh'
+      - '$HOME/.gnupg:/config/.gnupg'
+      - '$HOME/Projects:/data/workspace'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './rootfs/data/code:/data'
+      - './rootfs/config/code:/config'
+    networks:
+      - code-server
+
+networks:
+  code-server:
+    name: code-server
+    external: false
