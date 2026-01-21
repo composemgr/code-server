@@ -1,0 +1,49 @@
+# nginx proxy address - https://172.17.0.1:50022
+
+name: code-server
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  app:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server-app
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    privileged: true
+    tty: true
+    stdin_open: true
+    user: root
+    group_add:
+      - root
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+      PUID: ${SERVICE_USER:-1000}
+      PGID: ${SERVICE_GROUP:-1000}
+      GIT_DISCOVERY_ACROSS_FILESYSTEM: 1
+      DEFAULT_THEME: Visual Studio Dark
+      DEFAULT_WORKSPACE: /data/workspace
+      PROXY_DOMAIN: ${BASE_HOST_NAME:-$HOSTNAME}
+      PASSWORD: ${APP_USER_PASS:-changeme_user_password}
+      SUDO_PASSWORD: ${APP_ADMIN_PASS:-changeme_admin_password}
+    ports:
+      - '172.17.0.1:50022:8443'
+    volumes:
+      - './rootfs/config/ssh:/config/.ssh'
+      - './rootfs/config/gnupg:/config/.gnupg'
+      - './rootfs/data/workspace:/data/workspace'
+      - './rootfs/data/code-server:/data'
+      - './rootfs/config/code-server:/config'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    networks:
+      - code-server
+
+networks:
+  code-server:
+    name: code-server
+    external: false
