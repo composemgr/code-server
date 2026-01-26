@@ -1,27 +1,31 @@
 ## 👋 Welcome to code-server 🚀
 
-code-server - Self-hosted Docker Compose deployment
+VS Code in the browser - run Visual Studio Code on any machine
 
 ## 📋 Description
 
-Code-server is a containerized service deployed using Docker Compose. This setup provides a complete, production-ready deployment with proper security defaults, logging, and configuration management.
+VS Code in the browser - run Visual Studio Code on any machine
+
+## 🚀 Services
+
+- **app**: lscr.io/linuxserver/code-server:latest
 
 ## 📦 Installation
 
-### Using curl
-```shell
-curl -q -LSsf "https://raw.githubusercontent.com/composemgr/code-server/main/docker-compose.yaml" | docker compose -f - up -d
+### Option 1: Quick Install
+```bash
+curl -q -LSsf "https://raw.githubusercontent.com/composemgr/code-server/main/docker-compose.yaml" -o compose.yml
 ```
 
-### Using git
-```shell
+### Option 2: Git Clone
+```bash
 git clone "https://github.com/composemgr/code-server" ~/.local/srv/docker/code-server
 cd ~/.local/srv/docker/code-server
 docker compose up -d
 ```
 
-### Using composemgr
-```shell
+### Option 3: Using composemgr
+```bash
 composemgr install code-server
 ```
 
@@ -31,53 +35,63 @@ composemgr install code-server
 
 ```shell
 TZ=America/New_York
-BASE_HOST_NAME=${HOSTNAME}
-BASE_DOMAIN_NAME=
+SERVICE_USER=1000
+SERVICE_GROUP=1000
+APP_USER_PASS=changeme_user_password
+APP_ADMIN_PASS=changeme_admin_password
 ```
+
+See `docker-compose.yaml` for complete list of configurable options.
 
 ## 🌐 Access
 
-- **Web Interface**: http://172.17.0.1:50022
+- **Web Interface**: http://172.17.0.1:8080
 
 ## 📂 Volumes
 
-- `./rootfs/config/code-server` - Configuration files
-- `./rootfs/data/code-server` - Application data
+- `./rootfs/config/ssh` - Data storage
+- `./rootfs/config/gnupg` - Data storage
+- `./rootfs/data/workspace` - Data storage
+- `./rootfs/data/code-server` - Data storage
+- `./rootfs/config/code-server` - Data storage
 
 ## 🔐 Security
 
-- Change default passwords after first login
-- Use HTTPS via reverse proxy in production
-- Configure authentication as needed
+- Change all default passwords before deploying to production
+- Use strong secrets for all authentication tokens
+- Configure HTTPS using a reverse proxy (nginx, traefik, caddy)
+- Regularly update Docker images for security patches
+- Backup your data regularly
 
 ## 🔍 Logging
 
 ```shell
-docker compose logs -f
+docker compose logs -f app
 ```
 
 ## 🛠️ Management
 
-### Start services
-```shell
+```bash
+# Start services
 docker compose up -d
-```
 
-### Stop services
-```shell
+# Stop services
 docker compose down
-```
 
-### Update images
-```shell
+# Update to latest images
 docker compose pull && docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Restart services
+docker compose restart
 ```
 
 ## 📋 Requirements
 
 - Docker Engine 20.10+
 - Docker Compose V2+
-- Sufficient disk space for data and logs
 
 ## 🤝 Author
 
