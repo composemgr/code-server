@@ -34,11 +34,11 @@ services:
     ports:
       - '172.17.0.1:50022:8443'
     volumes:
-      - './rootfs/config/ssh:/config/.ssh'
-      - './rootfs/config/gnupg:/config/.gnupg'
-      - './rootfs/data/workspace:/data/workspace'
-      - './rootfs/data/code-server:/data'
-      - './rootfs/config/code-server:/config'
+      - './volumes/config/ssh:/config/.ssh'
+      - './volumes/config/gnupg:/config/.gnupg'
+      - './volumes/data/workspace:/data/workspace'
+      - './volumes/data/code-server:/data'
+      - './volumes/config/code-server:/config'
       - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - code-server
