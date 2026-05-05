@@ -49,11 +49,11 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/config/ssh` - Data storage
-- `./rootfs/config/gnupg` - Data storage
-- `./rootfs/data/workspace` - Data storage
-- `./rootfs/data/code-server` - Data storage
-- `./rootfs/config/code-server` - Data storage
+- `./volumes/config/ssh` - Data storage
+- `./volumes/config/gnupg` - Data storage
+- `./volumes/data/workspace` - Data storage
+- `./volumes/data/code-server` - Data storage
+- `./volumes/config/code-server` - Data storage
 
 ## 🔐 Security
 
