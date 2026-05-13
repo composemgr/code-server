@@ -1,4 +1,4 @@
-# nginx proxy address - https://172.17.0.1:50022
+# nginx proxy address - http://172.17.0.1:50022
 
 name: code-server
 x-logging: &default-logging
@@ -31,6 +31,8 @@ services:
       PROXY_DOMAIN: ${BASE_HOST_NAME:-$HOSTNAME}
       PASSWORD: ${APP_USER_PASS:-changeme_user_password}
       SUDO_PASSWORD: ${APP_ADMIN_PASS:-changeme_admin_password}
+      CONTAINER_NAME: code-server-app
+      HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
     ports:
       - '172.17.0.1:50022:8443'
     volumes:
@@ -42,8 +44,30 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - code-server
+      - proxy
+      - cloudflare
+    labels:
+      - 'traefik.enable=true'
+      - 'cloudflare.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'cloudflare.service=http://code-server-app:8443'
+      - 'cloudflare.hostname=code-server.${CLOUDFLARE_ZONE_NAME:-}'
+      - 'traefik.http.routers.code-server-app.entrypoints=http'
+      - 'traefik.http.routers.code-server-app-secure.tls=true'
+      - 'traefik.http.routers.code-server-app.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.middlewares.code-server-app-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.code-server-app.middlewares=code-server-app-https-redirect'
+      - 'traefik.http.routers.code-server-app-secure.entrypoints=https'
+      - 'traefik.http.routers.code-server-app-secure.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.routers.code-server-app-secure.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.code-server-app-secure.service=code-server-app'
+      - 'traefik.http.services.code-server-app.loadbalancer.server.port=8443'
 
 networks:
   code-server:
     name: code-server
     external: false
+  proxy:
+    external: true
+  cloudflare:
+    external: true
